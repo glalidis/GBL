@@ -73,14 +73,6 @@ function App() {
     <div className="App">
       <h1>Basketball League Table</h1>
 
-      <div className="form">
-        <input name="team1" value={form.team1} onChange={handleChange} placeholder="Team 1" />
-        <input name="score1" value={form.score1} onChange={handleChange} placeholder="Score 1" type="number" />
-        <input name="score2" value={form.score2} onChange={handleChange} placeholder="Score 2" type="number" />
-        <input name="team2" value={form.team2} onChange={handleChange} placeholder="Team 2" />
-        <button onClick={submitMatch}>Add Match</button>
-      </div>
-
       <button onClick={resetTable} style={{ margin: '10px', backgroundColor: 'red', color: 'white' }}>
         Reset Table
       </button>
