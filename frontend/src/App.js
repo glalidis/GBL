@@ -6,7 +6,7 @@ function App() {
   const [form, setForm] = useState({ team1: '', team2: '', score1: '', score2: '' });
 
   const fetchTable = () => {
-    fetch('http://localhost:4000/api/table')
+    fetch('https://gbl-ruy1.onrender.com')
       .then(res => res.json())
       .then(data => setTeams(data))
       .catch(err => console.error("Failed to fetch table:", err));
@@ -30,7 +30,7 @@ function App() {
     }
 
     try {
-      const response = await fetch('http://localhost:4000/api/match', {
+      const response = await fetch('https://gbl-ruy1.onrender.com', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
