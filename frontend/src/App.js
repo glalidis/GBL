@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import './App.css';
 
+const BACKEND_URL = 'https://your-backend-url.onrender.com'; // <-- change to your actual backend URL
+
 function App() {
   const [teams, setTeams] = useState([]);
-
-  // Replace this with your actual backend URL
-  const BACKEND_URL = 'https://gbl-ruy1.onrender.com';
+  const [form, setForm] = useState({ team1: '', team2: '', score1: '', score2: '' });
 
   const fetchTable = () => {
     fetch(`${BACKEND_URL}/api/table`)
@@ -18,9 +18,72 @@ function App() {
     fetchTable();
   }, []);
 
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setForm(prev => ({ ...prev, [name]: value }));
+  };
+
+  const submitMatch = async () => {
+    const { team1, team2, score1, score2 } = form;
+
+    if (!team1 || !team2 || !score1 || !score2 || team1 === team2) {
+      alert("Please fill all fields correctly.");
+      return;
+    }
+
+    try {
+      const response = await fetch(`${BACKEND_URL}/api/match`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          team1,
+          team2,
+          score1: parseInt(score1),
+          score2: parseInt(score2)
+        })
+      });
+
+      if (!response.ok) throw new Error("Failed to submit match.");
+
+      setForm({ team1: '', team2: '', score1: '', score2: '' });
+      fetchTable(); // Refresh table
+    } catch (err) {
+      console.error(err);
+      alert("Error submitting match");
+    }
+  };
+
+  // New reset handler
+  const resetTable = async () => {
+    if (!window.confirm("Are you sure you want to reset the whole table?")) return;
+
+    try {
+      const response = await fetch(`${BACKEND_URL}/api/reset`, { method: 'DELETE' });
+      if (!response.ok) throw new Error("Failed to reset");
+
+      alert("Table reset!");
+      fetchTable(); // Refresh empty table
+    } catch (err) {
+      console.error(err);
+      alert("Error resetting table");
+    }
+  };
+
   return (
     <div className="App">
       <h1>Basketball League Table</h1>
+
+      <div className="form">
+        <input name="team1" value={form.team1} onChange={handleChange} placeholder="Team 1" />
+        <input name="score1" value={form.score1} onChange={handleChange} placeholder="Score 1" type="number" />
+        <input name="score2" value={form.score2} onChange={handleChange} placeholder="Score 2" type="number" />
+        <input name="team2" value={form.team2} onChange={handleChange} placeholder="Team 2" />
+        <button onClick={submitMatch}>Add Match</button>
+      </div>
+
+      <button onClick={resetTable} style={{ margin: '10px', backgroundColor: 'red', color: 'white' }}>
+        Reset Table
+      </button>
 
       <table>
         <thead>
