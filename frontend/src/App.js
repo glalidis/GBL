@@ -1,3 +1,4 @@
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 import React, { useEffect, useState } from 'react';
 import './App.css';
 
@@ -6,7 +7,7 @@ function App() {
   const [form, setForm] = useState({ team1: '', team2: '', score1: '', score2: '' });
 
   const fetchTable = () => {
-    fetch('https://gbl-ruy1.onrender.com')
+    fetch(`${BACKEND_URL}/api/table`)
       .then(res => res.json())
       .then(data => setTeams(data))
       .catch(err => console.error("Failed to fetch table:", err));
@@ -30,7 +31,7 @@ function App() {
     }
 
     try {
-      const response = await fetch('https://gbl-ruy1.onrender.com', {
+      const response = await fetch(`${BACKEND_URL}/api/match`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
